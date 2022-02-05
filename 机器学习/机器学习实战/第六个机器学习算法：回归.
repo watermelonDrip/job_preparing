@@ -1,0 +1,77 @@
+# 线性回归 :开发流程
+
+收集数据: 采用任意方法收集数据
+准备数据: 回归需要数值型数据，标称型数据将被转换成二值型数据
+分析数据: 绘出数据的可视化二维图将有助于对数据做出理解和分析，在采用缩减法求得新回归系数之后，可以将新拟合线绘在图上作为对比
+训练算法: 找到回归系数
+测试算法: 使用 R^2 或者预测值和数据的拟合度，来分析模型的效果
+使用算法: 使用回归，可以在给定输入的时候预测出一个数值，这是对分类方法的提升，因为这样可以预测连续型数据而不仅仅是离散的类别标签
+
+```python
+# 标准回归函数和数据导入函数
+
+from numpy import *
+import matplotlib.pylab as plt
+
+def loadDataSet(fileName):                 
+    """ 加载数据
+        解析以tab键分隔的文件中的浮点数
+    Returns：
+        dataMat ：  feature 对应的数据集
+        labelMat ： feature 对应的分类标签，即类别标签
+
+    """
+    # 获取样本特征的总数，不算最后的目标变量 
+    numFeat = len(open(fileName).readline().split('\t')) - 1 
+    dataMat = []
+    labelMat = []
+    fr = open(fileName)
+    for line in fr.readlines():
+       
+        lineArr =[] # 读取每一行
+        
+        curLine = line.strip().split('\t')    # 删除一行中以tab分隔的数据前后的空白符号
+       
+        for i in range(numFeat): 
+                  
+            lineArr.append(float(curLine[i]))  # 将数据添加到lineArr List中，每一行数据测试数据组成一个行向量   
+           
+        dataMat.append(lineArr) # 将测试数据的输入数据部分存储到dataMat 的List中
+        
+        labelMat.append(float(curLine[-1]))#  将每一行的最后一个数据，即类别，或者叫目标变量存储到labelMat List中
+    return dataMat,labelMat
+```
+
+```python
+def standRegres(xArr,yArr):
+    '''
+    Description：
+        线性回归
+    Args:
+        xArr ：输入的样本数据，包含每个样本数据的 feature
+        yArr ：对应于输入数据的类别标签，也就是每个样本对应的目标变量
+    Returns:
+        ws：回归系数
+    '''
+
+    # mat()函数将xArr，yArr转换为矩阵 mat().T 代表的是对矩阵进行转置操作
+    xMat = mat(xArr)
+    yMat = mat(yArr).T
+    # 矩阵乘法的条件是左矩阵的列数等于右矩阵的行数
+    xTx = xMat.T*xMat
+    # 因为要用到xTx的逆矩阵，所以事先需要确定计算得到的xTx是否可逆，条件是矩阵的行列式不为0
+    # linalg.det() 函数是用来求得矩阵的行列式的，如果矩阵的行列式为0，则这个矩阵是不可逆的，就无法进行接下来的运算                   
+    if linalg.det(xTx) == 0.0:
+        print "This matrix is singular, cannot do inverse" 
+        return 
+    ws = xTx.I * (xMat.T*yMat)    # 最小二乘法        
+    return ws
+```
+```
+xArr, yArr = loadDataSet('data.txt')
+ws = standRegres(xArr,yArr)
+```
+ws = array([[3.00774324],
+        [1.69532264]])
+变量ws存放的就是回归系数。
+        
