@@ -61,7 +61,7 @@ measurements = dimension of signal : y = Ax。 y就是我们最终得到的样�
 
 主流的两种方式
 
-1. 优化optimization
+### 法1: 优化optimization
 
 思路1: 找一个最稀疏的解。表示最稀疏，找的是x的l0范数。问题是，很难求解，不连续。
 思路2: l1范数，凸优化问题。1范数绝对值是凸函数。（basis pursuit)
@@ -69,6 +69,54 @@ measurements = dimension of signal : y = Ax。 y就是我们最终得到的样�
 2. rip(理论上什么时候l1可以重构出原始信号）
 
 
+3. 但是l1 范数效果远达不到，对于很稀疏的信号的时候，就失真了。也就是说，l1范数的实际测量数，要高于理论下限的。
+
+### 有没有一个方式，可以用更少的测量来重构出原始信号呢？
+
+信息传播方法
+
+### 法2:统计推断 statistical inference
+
+1. 从统计推断的角度我们来重新看压缩感知的这个问题
+
+压缩感知这个问题实际上来看，我们真正的问题是要求解未知的稀疏的信号x，我们已知y（样本）， A（测量矩阵）。如何通过y和A推断出x。这就是经典的统计推断问题。
+
+
+2. 统计推断经典的理论(Bayes' theorem)
+
+<img width="666" alt="WeChat742d8839caa2bd1b5166b873c6db2386" src="https://user-images.githubusercontent.com/69283174/154221428-68180aef-ad4a-4d1b-8163-c5df990fec64.png">
+
+<img width="666" alt="WeChata993ce902924763dab5c0a103ed5b512" src="https://user-images.githubusercontent.com/69283174/154221668-4616bf12-e839-4504-ac9e-96c67e43e055.png">
+
+首先我们假设信号之间都是独立的，所以可以连乘
+
+<img width="666" alt="WeChat46eb52c7a54518d57124ebd20265efdd" src="https://user-images.githubusercontent.com/69283174/154222176-e652cede-f47e-4159-892a-b77d023cb82c.png">
 
 
 
+这个概率和统计物理有很紧密的联系的。也就是说统计推断和统计物理有很紧密的联系的。
+
+3. 从贝叶斯的角度来说，基于后验概率怎么去推测出信号x
+
+（1）MAP（lasso): 最大后验，取最大后验概率最大的x来作为x
+(2) mmse: 使得实际x和真实x的差的平凡和最小。从统计贝叶斯角度来说，mmse方法是贝叶斯最优的，也就是均方误差最小的量，也就是最接近真实信号的量。
+
+<img width="666" alt="WeChata5d101afbbcc129c3632b4836d218e56" src="https://user-images.githubusercontent.com/69283174/154223125-b45e76af-d6e1-4802-a8c6-d3dbff99347a.png">
+
+
+
+对于高维度来说，计算边缘分布是很困难的。
+
+4.提出了很多近似的方法来估计边缘分布：mcmc(维度高也耗时），Belief Propagation method（信念传播）
+
+# 信息传播
+
+## 几个经典的信息传递算法在压缩感知
+
+AMP（09），第一次把消息算法用在压缩感知上，用的map的统计推断的方式。与凸优化算法相比，这个算法可以解析的，也就是说，可以精确
+刻画每个迭代步的状态。这个是一般传统优化算法没有的性质。
+
+## BP怎么实现的? 
+
+BP最重要的一个假设是
+ 
