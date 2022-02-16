@@ -81,8 +81,17 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.scatter(xMat[:,1].flatten().A[0],yMat.T[:,0].flatten().A[0])
 ```
-<matplotlib.collections.PathCollection at 0x7f815d3eadd0>
 
+numpy 提供了相关系数的计算方法，通过指令corrcoef(yEstimate,yActual)来计算预测值与真实值的相关性。
+
+最佳拟合直线方法将数据视为直线进行建模，但是如何局部调整预测。
+
+## 局部加权线性回归
+
+线性回归的一个问题是可能出现欠拟合，因为求的是具有最小均方误差的无偏估计。显而易见，如果模型欠拟合将不能取得最好的预测效果。
+所以有些方法允许在估计中引入一些偏差，从而降低预测的均方误差。
+
+其中一种方法是局部加权线性回归（lwlR)。
 
 
 
