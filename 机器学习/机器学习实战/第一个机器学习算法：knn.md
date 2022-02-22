@@ -21,7 +21,8 @@ k-近邻采用测量不同特征之间的距离方法进行分类
 
 ### 伪代码
 ## 准备：使用python 导入数据
-```
+
+```python
 from numpy import * # 导入科学计算包numpy
 import operator     # 运算符模块
 def createdataSet():
